@@ -1,0 +1,78 @@
+/* Flaschenpost: Schriften, Farben, Abstände, Schriftgrößen. Werte aus DESIGN.md. */
+
+@font-face {
+  font-family: 'Libre Caslon Text';
+  src: url('../schriften/libre-caslon-text.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Andika';
+  src: url('../schriften/andika-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Andika';
+  src: url('../schriften/andika-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Farben */
+  --tiefe: #0e2f45;
+  --navy: #0b3155;
+  --navy-weich: #133c5a;
+  --welle: #2d6f98;
+  --weiss: #ffffff;
+  --papier: #f5f3ec;
+  --papier-linie: #d9d3c2;
+  --tinte-leise: #4a6275;
+  --lagune-ersatz: #cfe7ee;
+  --glas-kante: rgba(255, 255, 255, 0.5);
+  --glas-glanz: rgba(255, 255, 255, 0.62);
+  --glas-oben: rgba(214, 242, 252, 0.13);
+  --glas-unten: rgba(40, 110, 150, 0.06);
+  --glas-schatten: rgba(0, 0, 0, 0.36);
+  --nebel: rgba(10, 52, 84, 0.7);
+  --nebel-quer: rgba(10, 52, 84, 0.7);   /* Glasfenster: hält kleine weiße Schrift auch über hellem Wasser und Sand auf AA */
+  --lesetiefe: rgba(4, 30, 50, 0.55);   /* Schatten unter weißer Schrift auf Wasser */
+
+  /* Schriften */
+  --schrift-name: 'Libre Caslon Text', Georgia, 'Times New Roman', serif;
+  --schrift-text: 'Andika', 'Trebuchet MS', system-ui, sans-serif;
+
+  /* Schriftgrößen (rem, damit die Browser-Einstellung wirkt) */
+  --gr-display: clamp(2.25rem, 1.6rem + 2.4vw, 3.75rem);
+  --gr-title: clamp(1.75rem, 1.4rem + 1.2vw, 2.5rem);
+  --gr-frage: clamp(1.375rem, 1.2rem + 0.7vw, 1.875rem);
+  --gr-fundstueck: clamp(1.375rem, 1.15rem + 0.6vw, 1.75rem);
+  --gr-text: clamp(1.25rem, 1rem + 0.6vw, 1.625rem);
+  --gr-label: clamp(1rem, 0.9rem + 0.3vw, 1.125rem);
+  --gr-klein: clamp(1rem, 0.92rem + 0.25vw, 1.125rem);
+
+  /* Abstände */
+  --a-xs: 0.25rem;
+  --a-s: 0.5rem;
+  --a-m: 1rem;
+  --a-l: 1.5rem;
+  --a-xl: 2.5rem;
+  --a-xxl: 4rem;
+  --zeile: 34em;
+
+  /* Rundungen */
+  --r-fenster: 2rem;
+  --r-papier: 1.25rem;
+  --r-knopf: 1rem;
+
+  /* Bewegung */
+  --kurve: cubic-bezier(0.16, 1, 0.3, 1);
+  --dauer: 220ms;
+
+  /* Touchziel */
+  --tippen: 48px;
+}
