@@ -67,11 +67,11 @@ export const lehrkraefte = {
     },
     {
       titel: 'Lehrplanbezug',
-      absaetze: ['Lehrplan Thüringen (Erprobungsfassung) und Mediencurriculum der Schule:'],
+      absaetze: ['Lehrplan Thüringen und Mediencurriculum der Schule:'],
       liste: [
         ['Deutsch:', 'Medien kritisch hinterfragen (S. 11); Fragen an den Text stellen, Informationen mit Textstellen belegen, Sinnhaftigkeit von Aussagen prüfen (S. 25); Textsorten in Form, Inhalt und Absicht vergleichen, Autor oder Autorin einer Information erkennen (S. 28).'],
         ['Heimat- und Sachkunde:', 'Informationen suchen und bewerten (S. 11); den Wahrheitsgehalt von Informationen kritisch prüfen (S. 21); Werbung und ihre Wirkung untersuchen (Klasse 4, S. 32).'],
-        ['Mediencurriculum der Schule Klasse 3/4:', 'die Autorenschaft einer Quelle erkennen, den Informationsgehalt einer Quelle altersangemessen bewerten (S. 16, S. 24).']
+        ['Mediencurriculum der Schule, Klasse 3/4:', 'die Autorenschaft einer Quelle erkennen, den Informationsgehalt einer Quelle altersangemessen bewerten (S. 16, S. 24).']
       ]
     }
   ]

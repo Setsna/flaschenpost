@@ -5,12 +5,12 @@
    Noch nicht: kurze Rückmeldung, einmal „Noch einmal versuchen“; beim zweiten Mal die Lösung + Erklärung.
    Hilfe-Helfer: Mira gibt gestufte Tipps aus den Daten, keine KI, nie die Lösung.
    Antworten werden nicht gespeichert (Ingo, 11.11.2026), nur fertig, Siegel, Eintrag und Lernzeit. */
-import { config as C } from './config.js?v=64';
-import * as S from './speicher.js?v=64';
-import * as L from './lernzeit.js?v=64';
-import { stationen as WER, abschluss as WER_AB } from './daten/wer.js?v=64';
-import { stationen as WARUM, abschluss as WARUM_AB } from './daten/warum.js?v=64';
-import { stationen as WOHER, abschluss as WOHER_AB } from './daten/woher.js?v=64';
+import { config as C } from './config.js?v=65';
+import * as S from './speicher.js?v=65';
+import * as L from './lernzeit.js?v=65';
+import { stationen as WER, abschluss as WER_AB } from './daten/wer.js?v=65';
+import { stationen as WARUM, abschluss as WARUM_AB } from './daten/warum.js?v=65';
+import { stationen as WOHER, abschluss as WOHER_AB } from './daten/woher.js?v=65';
 
 export const STATIONEN = { ...WER, ...WARUM, ...WOHER };
 export const ABSCHLUESSE = { [WER_AB.modul]: WER_AB, [WARUM_AB.modul]: WARUM_AB, [WOHER_AB.modul]: WOHER_AB };
