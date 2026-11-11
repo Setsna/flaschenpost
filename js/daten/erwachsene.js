@@ -62,7 +62,7 @@ export const lehrkraefte = {
         ['Zeit:', 'Ein Brief dauert am iPad etwa 10 bis 15 Minuten, dazu kommt die Aufgabe „Am Tisch“. Das ist geschätzt, ein Test mit Kindern steht noch aus.'],
         ['Material für „Am Tisch“:', 'Papier und Stift, bei einem Brief auch Buntstifte. Für „Stille Post“ braucht nur die Lehrkraft einen Zettel.'],
         ['Ausgedacht:', 'Alle Briefe, Absender, Firmen und Namen sind ausgedacht. Eine Ausnahme: Was im Brief „Noah und die Seepferdchen“ über Seepferdchen steht, ist ein echter Sachverhalt.'],
-        ['Fundbuch:', 'Jedes Kind sieht dort seine Siegel, seine Lernzeit, seine Selbsteinschätzung und seine Einträge. Mit „Teilen“ schickt ein Kind seine Einträge über das Teilen-Menü des iPads, zum Beispiel per AirDrop an die Lehrkraft. „Alles kopieren“ holt sie in ein Dokument. Nach allen sechs Briefen gibt es dort eine Urkunde als PDF.']  /* „sechs“ anpassen, wenn Briefe dazukommen */
+        ['Fundbuch:', 'Jedes Kind sieht dort seine Siegel, seine Lernzeit, seine Selbsteinschätzung und seine Einträge. Mit „Teilen“ schickt ein Kind seine Einträge über das Teilen-Menü des iPads, zum Beispiel per AirDrop an die Lehrkraft. Nach allen sechs Briefen gibt es dort eine Urkunde als PDF.']  /* „sechs“ anpassen, wenn Briefe dazukommen */
       ]
     },
     {

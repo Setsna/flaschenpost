@@ -403,10 +403,6 @@ input[type="text"]:focus-visible { outline: 3px solid var(--navy); outline-offse
 .eintrag-liste__text { white-space: pre-line; }
 .eintrag-liste__meta { margin-top: var(--a-xs) !important; }
 .ohne-umbruch { white-space: nowrap; }
-.kopier-feld {
-  width: 100%; margin-top: var(--a-m); font: inherit; font-size: var(--gr-klein); color: var(--navy);
-  background: var(--weiss); border: 2px solid var(--tinte-leise); border-radius: var(--r-knopf); padding: 0.6rem 1rem;
-}
 .seite--buch .vorschau-satz { margin-top: 0; }
 
 /* ---------- Station („Brief“) ---------- */

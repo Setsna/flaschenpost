@@ -1,12 +1,12 @@
 /* Flaschenpost: Ansichten und Bedienung (Stand Etappe 1c).
    Willkommen, Kindwahl, Startseite „Nächster Brief“, Neu anfangen.
    Briefe (Stationen) und Fundbuch folgen ab Etappe 2. */
-import { config as C } from './config.js?v=63';
-import * as S from './speicher.js?v=63';
-import * as L from './lernzeit.js?v=63';
-import { stationZeigen, gibtStation, bedienen, STATIONEN, ABSCHLUESSE } from './station.js?v=63';
-import { urkundeAnbieten, urkundeTeilen } from './urkunde.js?v=63';
-import { eltern as ELTERN, lehrkraefte as LEHRKRAEFTE } from './daten/erwachsene.js?v=63';
+import { config as C } from './config.js?v=64';
+import * as S from './speicher.js?v=64';
+import * as L from './lernzeit.js?v=64';
+import { stationZeigen, gibtStation, bedienen, STATIONEN, ABSCHLUESSE } from './station.js?v=64';
+import { urkundeAnbieten, urkundeTeilen } from './urkunde.js?v=64';
+import { eltern as ELTERN, lehrkraefte as LEHRKRAEFTE } from './daten/erwachsene.js?v=64';
 
 const app = document.getElementById('app');
 const meldung = document.getElementById('meldung');
@@ -246,11 +246,10 @@ function ansichtFundbuch() {
     ? `<section class="papier buch" aria-labelledby="h-uebe"><h2 id="h-uebe">Das übe ich noch</h2>${satzListe(uebe)}</section>` : '';
 
   const eintraege = eintragListe(k);
-  const alleText = eintraege.map(e => `${e.titel}\n${e.text}`).join('\n\n');
+  /* Nur „Teilen“ (Teilen-Menü des Geräts). „Alles kopieren“ gibt es nicht mehr (Ingo, 11.11.2026). */
   const eintragTeil = eintraege.length
     ? `<ul class="eintrag-liste">${eintraege.map(e => `<li><p class="eintrag-liste__text">${esc(e.text)}</p><p class="leise eintrag-liste__meta">${esc(e.titel)}${e.t ? ` · <span class="ohne-umbruch">${datum(e.t)}</span>` : ''}</p></li>`).join('')}</ul>
-       <p class="knopfreihe">${navigator.share ? '<button type="button" class="knopf" data-aktion="teilen">Teilen</button>' : ''}<button type="button" class="knopf leise-knopf" data-aktion="kopieren">Alles kopieren</button><span class="leise" id="kopier-status" aria-live="polite"></span></p>
-       <textarea id="kopier-feld" class="kopier-feld" rows="6" readonly hidden aria-label="Alle Einträge zum Kopieren">${esc(alleText)}</textarea>`
+       ${navigator.share ? '<p class="knopfreihe"><button type="button" class="knopf" data-aktion="teilen">Teilen</button><span class="leise" id="teil-status" aria-live="polite"></span></p>' : ''}`
     : '<p>Hier stehen später deine Einträge. Am Ende jedes Briefs kannst du aufschreiben, was du entdeckt hast.</p>';
 
   zeigen(`
@@ -320,33 +319,16 @@ async function urkundeMachen(knopf) {
 
 /* Teilt alle Einträge über das Teilen-Menü des Geräts (AirDrop, Mail …). Die Seite selbst schickt nichts. */
 async function teilen() {
-  const feld = app.querySelector('#kopier-feld');
-  const status = app.querySelector('#kopier-status');
+  const status = app.querySelector('#teil-status');
   const k = S.aktiv();
-  if (!feld || !navigator.share) return;
+  if (!k || !navigator.share) return;
+  const text = eintragListe(k).map(e => `${e.titel}\n${e.text}`).join('\n\n');
   try {
-    await navigator.share({ title: `Einträge von ${k ? k.name : ''} – Flaschenpost`, text: feld.value });
+    await navigator.share({ title: `Einträge von ${k.name} – Flaschenpost`, text });
     status.textContent = 'Geteilt.';
   } catch (e) {
     if (e && e.name === 'AbortError') status.textContent = '';
-    else status.textContent = 'Teilen klappt hier gerade nicht. Tippe auf „Alles kopieren“.';
-  }
-}
-
-/* Kopiert alle Einträge. Klappt die Zwischenablage nicht, wird der Text zum Kopieren markiert (Muster Korallenriff). */
-async function kopieren() {
-  const feld = app.querySelector('#kopier-feld');
-  const status = app.querySelector('#kopier-status');
-  if (!feld) return;
-  try {
-    await navigator.clipboard.writeText(feld.value);
-    status.textContent = 'Kopiert.';
-  } catch (e) {
-    feld.hidden = false;
-    feld.focus();
-    feld.select();
-    feld.setSelectionRange(0, feld.value.length);  /* iPad markiert sonst nicht immer alles */
-    status.textContent = 'Der Text ist markiert. Halte den Finger darauf und tippe auf „Kopieren“.';
+    else status.textContent = 'Teilen klappt hier gerade nicht.';
   }
 }
 
@@ -408,7 +390,6 @@ app.addEventListener('click', e => {
   else if (a === 'unterwegs') melden(UNTERWEGS);
   else if (a === 'fundbuch') ansichtFundbuch();
   else if (a === 'start') ansichtStart();
-  else if (a === 'kopieren') kopieren();
   else if (a === 'teilen') teilen();
   else if (a === 'urkunde') urkundeMachen(b);
   else if (a === 'urkunde-teilen') urkundeTeilen(app.querySelector('#urkunde-status'));
