@@ -307,12 +307,12 @@ input[type="text"]:focus-visible { outline: 3px solid var(--navy); outline-offse
   -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
 }
 /* Löschen ist selten und endgültig: leise, abgesetzt, nicht neben den Alltagsknöpfen (steht nur im Fundbuch) */
-.leise-zeile { display: flex; justify-content: center; margin: 0 0 var(--a-l); }
+/* Löschen steht deutlich abgesetzt unter „Zurück“, damit man es nicht aus Versehen trifft */
+.leise-zeile { display: flex; justify-content: center; margin: var(--a-xl) 0 var(--a-l); }
 .leise-zeile__knopf {
   min-height: var(--tippen); padding: 0 0.875rem; border: 0; border-radius: var(--r-knopf); cursor: pointer;
   font: inherit; font-size: var(--gr-klein); color: var(--weiss);
   background: var(--nebel); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
-  text-decoration: underline; text-underline-offset: 0.18em; text-decoration-thickness: 0.08em;
 }
 .leise-zeile__knopf[disabled] { color: rgba(255, 255, 255, 0.62); cursor: not-allowed; }  /* Pille bleibt, nur die Schrift wird leiser */
 

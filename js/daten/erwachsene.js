@@ -1,9 +1,9 @@
-/* Flaschenpost: Texte für Lehrkräfte und Eltern (zwei Aufklapper am Ende der Startseite).
+/* Flaschenpost: Texte für Eltern und Lehrkräfte (zwei Aufklapper am Ende der Startseite).
    Quelle: Ausgaben/Erwachsenenbereich Entwurf.md (von Ingo geprüft am 11.11.2026). Ansprache: Sie.
    Daten, kein Code: Absätze sind Strings, Listen sind Arrays. */
 
 export const eltern = {
-  titel: 'Für Lehrkräfte und Eltern',
+  titel: 'Für Eltern',
   abschnitte: [
     {
       titel: 'Worum es geht',
@@ -53,7 +53,7 @@ export const eltern = {
 };
 
 export const lehrkraefte = {
-  titel: 'Für Lehrkräfte: Einsatz im Unterricht',
+  titel: 'Für Lehrkräfte',
   abschnitte: [
     {
       titel: 'Ablauf',

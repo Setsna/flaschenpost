@@ -1,12 +1,12 @@
 /* Flaschenpost: Ansichten und Bedienung (Stand Etappe 1c).
    Willkommen, Kindwahl, Startseite „Nächster Brief“, Neu anfangen.
    Briefe (Stationen) und Fundbuch folgen ab Etappe 2. */
-import { config as C } from './config.js?v=62';
-import * as S from './speicher.js?v=62';
-import * as L from './lernzeit.js?v=62';
-import { stationZeigen, gibtStation, bedienen, STATIONEN, ABSCHLUESSE } from './station.js?v=62';
-import { urkundeAnbieten, urkundeTeilen } from './urkunde.js?v=62';
-import { eltern as ELTERN, lehrkraefte as LEHRKRAEFTE } from './daten/erwachsene.js?v=62';
+import { config as C } from './config.js?v=63';
+import * as S from './speicher.js?v=63';
+import * as L from './lernzeit.js?v=63';
+import { stationZeigen, gibtStation, bedienen, STATIONEN, ABSCHLUESSE } from './station.js?v=63';
+import { urkundeAnbieten, urkundeTeilen } from './urkunde.js?v=63';
+import { eltern as ELTERN, lehrkraefte as LEHRKRAEFTE } from './daten/erwachsene.js?v=63';
 
 const app = document.getElementById('app');
 const meldung = document.getElementById('meldung');
