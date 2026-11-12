@@ -633,3 +633,7 @@ input[type="text"]:focus-visible { outline: 3px solid var(--navy); outline-offse
 /* Sprungziel im Fundbuch: oben etwas Luft, damit Überschrift und Fokusring ganz sichtbar sind */
 .buch { scroll-margin-top: var(--a-l); }
 #h-urkunde:focus { outline: none; }  /* Sprungziel von „Zur Urkunde“, wie .kopf h1:focus */
+
+/* Kein Doppeltipp-Zoom in Safari (Kinder tippen Knöpfe schnell hintereinander, Safari zoomte dann).
+   Zoomen mit zwei Fingern bleibt möglich. Flächen zum Ziehen oder Malen behalten ihr eigenes touch-action. (12.11.2026) */
+html, body, button, a, input, label, summary, select, textarea { touch-action: manipulation; }

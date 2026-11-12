@@ -4,7 +4,7 @@
    - ?vorschau=N zeigt einen Beispielstand mit N fertigen Stationen und speichert nichts.
    - Kein Export als Datei (Ingo, 11.11.2026: für Kinder zu schwer, wie beim Zahlenschwarm).
    Aufbau übernommen vom Zahlenschwarm (js/speicher.js), umgebaut auf ein ES-Modul. */
-import { config as C } from './config.js?v=65';
+import { config as C } from './config.js?v=66';
 
 const KEY = `${C.speicher.schluessel}-v${C.speicher.schema}`;
 const WER = C.speicher.werSchluessel;
