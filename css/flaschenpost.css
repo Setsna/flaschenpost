@@ -127,10 +127,10 @@ input[type="text"] {
 input[type="text"]:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; border-color: var(--navy); }
 .hinweis-feld { min-height: 1.45em; margin: var(--a-s) 0 0; font-weight: 700; }
 .hinweis-feld:empty { min-height: 0; }
+/* Zugangscode: Großbuchstaben, etwas Luft zwischen den Zeichen (wie beim Zahlenschwarm) */
+.code-feld { max-width: 16rem; letter-spacing: 0.12em; text-transform: uppercase; }
 
 /* ---------- Kinderliste ---------- */
-.kinder-liste { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(11rem, 100%), 1fr)); gap: var(--a-s); }
-.kinder-liste .knopf { width: 100%; }
 
 /* ---------- Meldung, Vorschau ---------- */
 .meldung-bereich { position: sticky; bottom: 0; display: flex; justify-content: center; padding: 0 var(--a-m) var(--a-m); pointer-events: none; }
@@ -306,15 +306,6 @@ input[type="text"]:focus-visible { outline: 3px solid var(--navy); outline-offse
   background: var(--nebel); border-radius: var(--r-knopf);
   -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
 }
-/* Löschen ist selten und endgültig: leise, abgesetzt, nicht neben den Alltagsknöpfen (steht nur im Fundbuch) */
-/* Löschen steht deutlich abgesetzt unter „Zurück“, damit man es nicht aus Versehen trifft */
-.leise-zeile { display: flex; justify-content: center; margin: var(--a-xl) 0 var(--a-l); }
-.leise-zeile__knopf {
-  min-height: var(--tippen); padding: 0 0.875rem; border: 0; border-radius: var(--r-knopf); cursor: pointer;
-  font: inherit; font-size: var(--gr-klein); color: var(--weiss);
-  background: var(--nebel); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
-}
-.leise-zeile__knopf[disabled] { color: rgba(255, 255, 255, 0.62); cursor: not-allowed; }  /* Pille bleibt, nur die Schrift wird leiser */
 
 /* Hierarchie der Startseite: Name > Brief > Fenster */
 .seite--start .kopf h1 { font-size: var(--gr-display); }

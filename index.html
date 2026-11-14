@@ -3,12 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self'; style-src 'self'; script-src 'self'; font-src 'self'; connect-src 'self'; manifest-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
+  <!-- CSP: nur eigene Dateien. Einzige Ausnahme für das gemeinsame Konto (seit 14.11.2026):
+       Skripte von www.gstatic.com (Firebase, unten mit Prüfsumme) und Verbindungen zu *.googleapis.com.
+       datenschutz.html und impressum.html haben diese Ausnahme nicht. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self'; style-src 'self'; script-src 'self' https://www.gstatic.com; font-src 'self'; connect-src 'self' https://*.googleapis.com; manifest-src 'self'; base-uri 'none'; form-action 'none'; object-src 'none'">
   <meta name="referrer" content="no-referrer">
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#0e2f45">
   <title>Flaschenpost</title>
-  <meta name="description" content="Quellen prüfen für Klasse 3 und 4: Wer hat das geschrieben, warum, und woher weiß er das? Ohne Anmeldung, ohne Werbung. Alles bleibt auf dem Gerät.">
+  <meta name="description" content="Quellen prüfen für Klasse 3 und 4: Wer hat das geschrieben, warum, und woher weiß er das? Anmeldung mit dem Code der Klasse, ohne Werbung, ohne Rangliste.">
   <link rel="icon" href="bilder/favicon-64.png?b=1">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="bilder/app-180.png?b=1">
@@ -18,10 +21,18 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="preload" href="schriften/andika-regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="schriften/libre-caslon-text.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="css/tokens.css?v=66">
-  <link rel="stylesheet" href="css/flaschenpost.css?v=66">
-  <script src="js/fehler.js?v=66"></script>
-  <script type="module" src="js/app.js?v=66"></script>
+  <link rel="stylesheet" href="css/tokens.css?v=67">
+  <link rel="stylesheet" href="css/flaschenpost.css?v=67">
+  <script src="js/fehler.js?v=67"></script>
+  <script src="js/konto-abgleich.js?v=67"></script>
+  <script src="js/konto-speicher.js?v=67"></script>
+  <script src="js/konto-cloud.js?v=67"></script>
+  <script type="module" src="js/app.js?v=67"></script>
+  <!-- Firebase für das gemeinsame Konto, dieselbe Version und Prüfsumme wie im Perlentaucher und Zahlenschwarm.
+       defer: Sie laden nach den eigenen Skripten und halten die Seite nicht auf (js/konto-cloud.js wartet auf sie). -->
+  <script defer src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js" integrity="sha384-ZaR6mWzmJtrRibZ1Vm7SoHFr8OXjyAuGAXalGDKqbxFT18oi/z+oZLIRFkpeNor1" crossorigin="anonymous"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js" integrity="sha384-I1LYojsZ5RM1cOda44Z2h42Qa6YfsQ1XkXxREnhp4ueYBR/4d1pG1K+NZM537Vsj" crossorigin="anonymous"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js" integrity="sha384-Ke0FJhH7LyRqDxZ0wt+/OXV38yfQVu7g9VPEEGjYmB4RVOY/ta04uecRhsMwT7V3" crossorigin="anonymous"></script>
 </head>
 <body class="lagune">
   <picture class="wasser" aria-hidden="true">

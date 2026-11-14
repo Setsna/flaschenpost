@@ -1,12 +1,13 @@
-/* Flaschenpost: Ansichten und Bedienung (Stand Etappe 1c).
-   Willkommen, Kindwahl, Startseite „Nächster Brief“, Neu anfangen.
-   Briefe (Stationen) und Fundbuch folgen ab Etappe 2. */
-import { config as C } from './config.js?v=66';
-import * as S from './speicher.js?v=66';
-import * as L from './lernzeit.js?v=66';
-import { stationZeigen, gibtStation, bedienen, STATIONEN, ABSCHLUESSE } from './station.js?v=66';
-import { urkundeAnbieten, urkundeTeilen } from './urkunde.js?v=66';
-import { eltern as ELTERN, lehrkraefte as LEHRKRAEFTE } from './daten/erwachsene.js?v=66';
+/* Flaschenpost: Ansichten und Bedienung.
+   Anmeldung mit dem Code (seit dem Konto-Umbau, 14.11.2026), Startseite „Nächster Brief“, Fundbuch, Urkunde.
+   Die Briefe (Stationen) stehen in js/station.js. */
+import { config as C } from './config.js?v=67';
+import * as S from './speicher.js?v=67';
+const cloud = S.cloud;
+import * as L from './lernzeit.js?v=67';
+import { stationZeigen, gibtStation, bedienen, STATIONEN, ABSCHLUESSE } from './station.js?v=67';
+import { urkundeAnbieten, urkundeTeilen } from './urkunde.js?v=67';
+import { eltern as ELTERN, lehrkraefte as LEHRKRAEFTE } from './daten/erwachsene.js?v=67';
 
 const app = document.getElementById('app');
 const meldung = document.getElementById('meldung');
@@ -56,51 +57,60 @@ function kopf(titel, mitMira = false) {
     </header>`;
 }
 
-function ansichtNeu() {
-  const andere = S.alleKinder().length > 0;
+let ansicht = '';
+const MOMENT = 'Einen Moment …';
+
+/* Ergebnis von cloud.anmelden() oder start() anzeigen */
+function nachAnmelden(r) {
+  if (!r.ok) {
+    if (ansicht === 'code' && app.querySelector('#code')) {
+      app.querySelector('#code-form button[type="submit"]').disabled = false;
+      app.querySelector('#code-hinweis').textContent = r.grund || '';
+      app.querySelector('#code').focus();
+    } else ansichtCode(r.grund);
+    return;
+  }
+  ansichtStart();
+  if (r.gespeichert === false) melden(SPEICHER_FEHLT);
+}
+
+function ansichtCode(hinweis = '') {
   zeigen(`
-    ${kopf(andere ? 'Neues Kind' : 'Wer hat das geschrieben?', !andere)}
-    <section class="papier" aria-labelledby="h-neu">
-      ${andere ? '' : `<p>Ich bin ${esc(C.maskottchen)}. Ich sammle Flaschenpost. Bei jedem Brief fragen wir zusammen: Wer hat das geschrieben? Warum? Und woher weiß er das?</p>`}
-      <h2 id="h-neu">Wie heißt du?</h2>
-      <form id="neu-form" novalidate>
-        <label for="name">Dein Vorname</label>
-        <input type="text" id="name" name="name" autocomplete="off" autocapitalize="words" spellcheck="false" maxlength="${C.nameMaxLaenge}" aria-describedby="name-hinweis name-info">
-        <p id="name-hinweis" class="hinweis-feld" aria-live="polite"></p>
-        <p class="knopfreihe">
-          <button type="submit" class="knopf haupt">Los geht’s</button>
-          ${andere ? '<button type="button" class="knopf leise-knopf" data-aktion="wer">Zurück</button>' : ''}
-        </p>
+    ${kopf('Wer hat das geschrieben?', true)}
+    <section class="papier" aria-labelledby="h-code">
+      <p>Ich bin ${esc(C.maskottchen)}. Ich sammle Flaschenpost. Bei jedem Brief fragen wir zusammen: Wer hat das geschrieben? Warum? Und woher weiß er das?</p>
+      <h2 id="h-code">Wie lautet dein Code?</h2>
+      <form id="code-form" novalidate>
+        <label for="code">Dein Code</label>
+        <input type="text" id="code" name="code" class="code-feld" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="${C.codeLaenge + 4}" aria-describedby="code-hinweis code-info">
+        <p id="code-hinweis" class="hinweis-feld" aria-live="polite">${esc(hinweis || '')}</p>
+        <p class="knopfreihe"><button type="submit" class="knopf haupt">Weiter</button></p>
       </form>
-      <p id="name-info" class="leise">Dein Name bleibt nur auf diesem Gerät.</p>
+      <p id="code-info" class="leise">Dein Code hat ${C.codeLaenge} Zeichen: Buchstaben und Zahlen. Es ist derselbe Code wie beim Perlentaucher.</p>
     </section>
-    ${andere ? '' : erwachsene()}`, andere ? 'Neues Kind' : '');
-  app.querySelector('#neu-form').addEventListener('submit', e => {
+    ${erwachsene()}`, '');
+  ansicht = 'code';
+  app.querySelector('#code-form').addEventListener('submit', e => {
     e.preventDefault();
-    const feld = app.querySelector('#name');
-    const r = S.anlegen(feld.value);
-    app.querySelector('#name-hinweis').textContent = '';
-    if (!r.kind) {
-      app.querySelector('#name-hinweis').textContent = r.grund;
-      feld.focus();
-      return;
-    }
-    ansichtStart();
-    if (!r.ok) melden(S.zustand.ladeFehler ? LADEN_FEHLT : SPEICHER_FEHLT);
+    const knopf = e.target.querySelector('button[type="submit"]');
+    if (knopf.disabled) return;
+    knopf.disabled = true;
+    app.querySelector('#code-hinweis').textContent = MOMENT;
+    cloud.anmelden(app.querySelector('#code').value).then(nachAnmelden, () => nachAnmelden({ ok: false, grund: cloud.TEXT.sonst }));
   });
 }
 
-function ansichtWer() {
-  const liste = S.alleKinder().map(k => `<li><button type="button" class="knopf" data-aktion="waehlen" data-id="${esc(k.id)}">${esc(k.name)}</button></li>`).join('');
-  zeigen(`
-    ${kopf('Wer arbeitet heute?')}
-    <section class="papier" aria-labelledby="h-namen">
-      <h2 id="h-namen">Tippe auf deinen Namen.</h2>
-      <ul class="kinder-liste">${liste}</ul>
-      <p class="knopfreihe"><button type="button" class="knopf leise-knopf" data-aktion="neu">Ich bin neu hier</button></p>
-    </section>
-    ${erwachsene()}`, 'Wer arbeitet heute?');
+/* Zeile auf der Startseite, wenn der Stand gerade nicht in der Datenbank ankommt */
+function netzText() {
+  const z = cloud.zustand().art;
+  if (z === 'lokal') return 'Gerade ohne Internet. Dein Stand bleibt auf diesem Gerät und wird später abgeglichen.';
+  if (z === 'fehler') return 'Dein Stand konnte gerade nicht im Internet gespeichert werden. Er bleibt auf diesem Gerät. Bitte sag deiner Lehrkraft Bescheid.';
+  return '';
 }
+cloud.beiZustand(() => {
+  const p = app.querySelector('#netz-zeile');
+  if (p) { p.textContent = netzText(); p.hidden = !p.textContent; }
+});
 
 /* Eine Flasche je Station: leer (offen) oder mit gerolltem Brief und Siegel (fertig).
    Der Unterschied liegt in der Form, nicht in der Farbe. */
@@ -135,7 +145,7 @@ const UNTERWEGS = 'Dieser Brief ist noch unterwegs. Er kommt bald.';
 
 function ansichtStart() {
   const k = S.aktiv();
-  const mehrere = S.alleKinder().length > 1;
+  if (!k) { ansichtCode(); return; }
   const naechster = naechsterBrief(k);
   const fenster = C.module.map(m => {
     const fertig = m.stationen.filter(id => k.stationen[id] && k.stationen[id].fertig).length;
@@ -168,12 +178,13 @@ function ansichtStart() {
     </section>
     <nav class="wahl" aria-label="Mehr">
       <button type="button" class="knopf glas-knopf" data-aktion="fundbuch">Mein Fundbuch</button>
-      ${S.istVorschau ? '' : `${mehrere ? '<button type="button" class="knopf glas-knopf" data-aktion="wer">Kind wechseln</button>' : ''}
-      <button type="button" class="knopf glas-knopf" data-aktion="neu">Neues Kind</button>`}
+      ${S.istVorschau ? '' : '<button type="button" class="knopf glas-knopf" data-aktion="abmelden">Abmelden</button>'}
     </nav>
+    <p class="vorschau-satz netz-zeile" id="netz-zeile" role="status"${netzText() ? '' : ' hidden'}>${esc(netzText())}</p>
     ${S.istVorschau ? '<p class="vorschau-satz">In der Vorschau wird nichts gespeichert und nichts gelöscht.</p>' : ''}
     ${erwachsene()}`, `Hallo, ${k.name}`);
   app.classList.add('seite--start');
+  ansicht = 'start';
   adresse('');
 }
 
@@ -214,14 +225,17 @@ function briefName(id) {
   return id;
 }
 
-function eintragListe(k) {
+/* Einträge liegen nur auf diesem Gerät (js/speicher.js), nicht im Stand */
+function eintragListe() {
+  const e = S.eintraege();
   return C.module.flatMap(m => m.stationen)
-    .filter(id => k.eintraege[id] && String(k.eintraege[id].text || '').trim())
-    .map(id => ({ titel: briefName(id), text: String(k.eintraege[id].text).trim(), t: k.eintraege[id].t }));
+    .filter(id => e[id] && String(e[id].text || '').trim())
+    .map(id => ({ titel: briefName(id), text: String(e[id].text).trim(), t: e[id].t }));
 }
 
 function ansichtFundbuch() {
   const k = S.aktiv();
+  if (!k) { ansichtCode(); return; }
   const briefe = C.module.map(m => `
       <h3>${esc(m.titel)}</h3>
       <ul class="siegel-liste">${m.stationen.map((id, i) => {
@@ -245,7 +259,7 @@ function ansichtFundbuch() {
   const uebeBlatt = uebe.length
     ? `<section class="papier buch" aria-labelledby="h-uebe"><h2 id="h-uebe">Das übe ich noch</h2>${satzListe(uebe)}</section>` : '';
 
-  const eintraege = eintragListe(k);
+  const eintraege = eintragListe();
   /* Nur „Teilen“ (Teilen-Menü des Geräts). „Alles kopieren“ gibt es nicht mehr (Ingo, 11.11.2026). */
   const eintragTeil = eintraege.length
     ? `<ul class="eintrag-liste">${eintraege.map(e => `<li><p class="eintrag-liste__text">${esc(e.text)}</p><p class="leise eintrag-liste__meta">${esc(e.titel)}${e.t ? ` · <span class="ohne-umbruch">${datum(e.t)}</span>` : ''}</p></li>`).join('')}</ul>
@@ -263,18 +277,13 @@ function ansichtFundbuch() {
     <section class="papier buch" aria-labelledby="h-zeit"><h2 id="h-zeit">Meine Lernzeit</h2>${lernzeit}<p class="leise">Mehr ist nicht besser. Jeder lernt in seinem Tempo.</p></section>
     <section class="papier buch" aria-labelledby="h-kann"><h2 id="h-kann">Das kann ich schon</h2>${kannTeil}</section>
     ${uebeBlatt}
-    <section class="papier buch" aria-labelledby="h-eintraege"><h2 id="h-eintraege">Meine Einträge</h2>${eintragTeil}</section>
+    <section class="papier buch" aria-labelledby="h-eintraege"><h2 id="h-eintraege">Meine Einträge</h2>${eintragTeil}<p class="leise">Deine Einträge bleiben nur auf diesem Gerät.</p></section>
     ${S.istVorschau ? '<p class="vorschau-satz">Vorschau: Alles hier sind Beispiele.</p>' : ''}
     <p class="knopfreihe zurueck"><button type="button" class="knopf glas-knopf" data-aktion="start">Zurück zur Flaschenpost</button></p>
-    <p class="leise-zeile"><button type="button" class="leise-zeile__knopf" data-aktion="loeschen-frage"${S.istVorschau ? ' disabled' : ''}>Alles löschen / Neu anfangen</button></p>
-    <dialog class="dialog" id="loeschen-dialog" aria-labelledby="ld-titel" aria-describedby="ld-text">
-      <h2 id="ld-titel">Wirklich alles löschen?</h2>
-      <p id="ld-text">Alles von ${esc(k.name)} wird gelöscht: Siegel, Lernzeit und deine Einträge. Das geht nicht rückgängig. Die anderen Kinder auf diesem Gerät bleiben.</p>
-      <p class="knopfreihe"><button type="button" class="knopf haupt" data-aktion="loeschen-nein" autofocus>Nein, behalten</button><button type="button" class="knopf leise-knopf" data-aktion="loeschen-ja">Ja, alles löschen</button></p>
-    </dialog>`, `Fundbuch von ${k.name}`);
+    `, `Fundbuch von ${k.name}`);
   app.classList.add('seite--buch');
+  ansicht = 'fundbuch';
   adresse('fundbuch');
-  app.querySelector('#loeschen-dialog').addEventListener('cancel', e => { e.preventDefault(); dialogZu('loeschen-dialog', 'loeschen-frage'); });
 }
 
 /* ---------- Urkunde (Zeichnen und PDF in js/urkunde.js) ---------- */
@@ -322,7 +331,7 @@ async function teilen() {
   const status = app.querySelector('#teil-status');
   const k = S.aktiv();
   if (!k || !navigator.share) return;
-  const text = eintragListe(k).map(e => `${e.titel}\n${e.text}`).join('\n\n');
+  const text = eintragListe().map(e => `${e.titel}\n${e.text}`).join('\n\n');
   try {
     await navigator.share({ title: `Einträge von ${k.name} – Flaschenpost`, text });
     status.textContent = 'Geteilt.';
@@ -332,25 +341,10 @@ async function teilen() {
   }
 }
 
-/* ---------- Dialoge ---------- */
-function dialogAuf(id) {
-  const d = document.getElementById(id);
-  if (d && typeof d.showModal === 'function' && !d.open) d.showModal();
-}
-/* Dialog zu, Fokus zurück auf den Knopf, der ihn geöffnet hat */
-function dialogZu(id, ausloeser) {
-  const d = document.getElementById(id);
-  if (d && d.open) d.close();
-  const b = typeof ausloeser === 'string' ? app.querySelector(`[data-aktion="${ausloeser}"]`) : ausloeser;
-  if (b) b.focus();
-}
-
-function loeschenJa() {
-  const name = S.aktiv() ? S.aktiv().name : '';
-  dialogZu('loeschen-dialog', null);
-  const ok = S.aktivLoeschen();
-  S.alleKinder().length ? ansichtWer() : ansichtNeu();
-  melden(ok ? `Alles von ${name} ist gelöscht.` : SPEICHER_FEHLT);
+/* ---------- Abmelden ---------- */
+function abmelden(knopf) {
+  knopf.disabled = true;
+  cloud.abmelden().then(() => { ansichtCode(); }, () => { ansichtCode(); });
 }
 
 /* Zwei Aufklapper am Ende der Startseite (Texte in js/daten/erwachsene.js) */
@@ -381,12 +375,7 @@ app.addEventListener('click', e => {
   const b = e.target.closest('[data-aktion]');
   if (!b || b.disabled) return;
   const a = b.dataset.aktion;
-  if (a === 'neu') ansichtNeu();
-  else if (a === 'wer') { S.abmelden(); ansichtWer(); }
-  else if (a === 'waehlen') { if (S.waehlen(b.dataset.id)) ansichtStart(); }
-  else if (a === 'loeschen-frage') dialogAuf('loeschen-dialog');
-  else if (a === 'loeschen-nein') dialogZu('loeschen-dialog', 'loeschen-frage');
-  else if (a === 'loeschen-ja') loeschenJa();
+  if (a === 'abmelden') abmelden(b);
   else if (a === 'unterwegs') melden(UNTERWEGS);
   else if (a === 'fundbuch') ansichtFundbuch();
   else if (a === 'start') ansichtStart();
@@ -394,7 +383,7 @@ app.addEventListener('click', e => {
   else if (a === 'urkunde') urkundeMachen(b);
   else if (a === 'urkunde-teilen') urkundeTeilen(app.querySelector('#urkunde-status'));
   else if (a === 'zur-urkunde') { ansichtFundbuch(); const h = app.querySelector('#h-urkunde'); h.closest('section').scrollIntoView({ block: 'start' }); h.focus({ preventScroll: true }); }
-  else if (a === 'brief') stationZeigen(ctx, b.dataset.id);
+  else if (a === 'brief') { stationZeigen(ctx, b.dataset.id); ansicht = 'brief'; }
 });
 
 /* ---------- Licht und Blasen: ruhen außer Sicht und bei verstecktem Tab (wie Lernlagune) ---------- */
@@ -414,17 +403,56 @@ if (S.istVorschau) {
   h.textContent = 'Vorschau: Hier wird nichts gespeichert.';
   h.hidden = false;
 }
-/* #fundbuch öffnet direkt das Fundbuch (Lesezeichen, Tests) */
 /* #fundbuch und #brief/<id> öffnen direkt die Ansicht (Neuladen, Lesezeichen, Tests) */
-const ziel = location.hash.slice(1);
-if (S.aktiv()) {
-  if (ziel === 'fundbuch') ansichtFundbuch();
-  else if (ziel.startsWith('brief/') && gibtStation(ziel.slice(6))) stationZeigen(ctx, ziel.slice(6));
-  else ansichtStart();
+function anzeigen() {
+  const ziel = location.hash.slice(1);
+  if (S.aktiv()) {
+    if (ziel === 'fundbuch') ansichtFundbuch();
+    else if (ziel.startsWith('brief/') && gibtStation(ziel.slice(6))) { stationZeigen(ctx, ziel.slice(6)); ansicht = 'brief'; }
+    else ansichtStart();
+  }
+  else ansichtCode();
+  if (S.zustand.ladeFehler) melden(LADEN_FEHLT);
 }
-else if (S.alleKinder().length) ansichtWer();
-else ansichtNeu();
-if (S.zustand.ladeFehler) melden(LADEN_FEHLT);
+
+/* Die Lehrkraft hat den Stand zurückgesetzt: Das Gerät hat seinen Stand verworfen (js/konto-cloud.js). */
+cloud.beiNeustart(() => {
+  if (ansicht === 'start') ansichtStart();
+  else if (ansicht === 'fundbuch') ansichtFundbuch();
+  melden('Deine Lehrkraft hat deine Flaschenpost neu gestartet. Du fängst von vorn an.');
+});
+
+/* Was das Gerät schon weiß, steht sofort da. Die Antwort aus dem Netz kommt nach.
+   Gewechselt wird nur auf der Code- oder Startseite, nie mitten in einem Brief. */
+const darfWechseln = () => ['code', 'start'].includes(ansicht);
+function starten() {
+  if (S.istVorschau) { anzeigen(); return; }
+  const LA = window.LagunenKonto.adresse;
+  const qr = LA.code(), spur = LA.spur();
+  LA.saeubern();
+  if (qr) {
+    /* Ein gescannter Code hat Vorrang vor dem Kind, das auf dem Gerät noch angemeldet ist. */
+    if (S.aktiv() && S.code() !== qr) S.S.abmelden();
+    if (S.aktiv()) ansichtStart(); else ansichtCode(MOMENT);
+    cloud.anmelden(qr).then(r => { if (darfWechseln()) { if (!r.ok) ansichtCode(r.grund); else nachAnmelden(r); } }, () => {});
+    return;
+  }
+  anzeigen();
+  if (spur && ansicht === 'code') app.querySelector('#code-hinweis').textContent = 'Der Code wurde nicht ganz gelesen. Tippe ihn bitte ein.';
+  const gemerkt = S.code();
+  cloud.start().then(r => {
+    if (r.ok) { if (darfWechseln()) nachAnmelden(r); return null; }
+    if (r.grund) return r;
+    /* Firebase kennt niemanden, der Tab aber schon: mit dem gemerkten Code anmelden */
+    return gemerkt && S.code() === gemerkt ? cloud.anmelden(gemerkt) : null;
+  }).then(r => {
+    if (!r) return;
+    if (r.ok) { if (ansicht === 'start' && darfWechseln()) ansichtStart(); return; }
+    /* Die Lehrkraft hat den Code gesperrt: nicht auf dem Gerät weiterarbeiten lassen */
+    if (r.grund === cloud.TEXT.gesperrt && S.aktiv()) { S.S.abmelden(); if (darfWechseln()) ansichtCode(r.grund); }
+  }, () => {});
+}
+starten();
 
 /* Für den Rauchtest */
-window.FP = { S, C, L, STATIONEN, bereit: true };
+window.FP = { S, C, L, STATIONEN, cloud, bereit: true };

@@ -5,12 +5,33 @@ export const config = {
   unterzeile: 'Wer hat das geschrieben?',
   maskottchen: 'Mira',
 
-  /* Speicher im Browser. Ändert sich der Aufbau der Daten, schema hochzählen
-     und in js/speicher.js eine Umwandlung vom alten Stand ergänzen. */
+  /* Speicher im Browser (seit dem Konto-Umbau 14.11.2026, Schema 2):
+     localStorage  flaschenpost-v2.<code>             Stand samt Vorname (für die Anzeige ohne Netz)
+                   flaschenpost-v2.<code>.abgleich    zuletzt abgeglichener Stand
+                   flaschenpost-v2.<code>.eintraege   „Mein Eintrag“, nur auf diesem Gerät
+     sessionStorage flaschenpost-v2-wer               welcher Code in diesem Tab angemeldet ist
+     Der alte Stand ohne Konto (flaschenpost-v1) wird nicht übernommen und nicht gelöscht. */
   speicher: {
-    schluessel: 'flaschenpost',        /* localStorage: flaschenpost-v<schema> */
-    schema: 1,
-    werSchluessel: 'flaschenpost-wer'  /* sessionStorage: welches Kind in diesem Tab arbeitet */
+    schluessel: 'flaschenpost',
+    schema: 2
+  },
+  codeLaenge: 8,
+
+  /* Gemeinsames Konto (Konto-Umbau): das Firebase-Projekt des Perlentauchers.
+     Diese Angaben sind keine Geheimnisse, sie stehen bei jeder Firebase-Seite im Quelltext.
+     Geschützt werden die Daten durch die Regeln in der Firebase-Konsole. */
+  firebase: {
+    apiKey: 'AIzaSyBX3MUJq69uFyejbEiJimGeAtHMER3OCdE',
+    authDomain: 'lernplattform-44aa1.firebaseapp.com',
+    projectId: 'lernplattform-44aa1',
+    storageBucket: 'lernplattform-44aa1.firebasestorage.app',
+    messagingSenderId: '213839225177',
+    appId: '1:213839225177:web:4cf676269e50c708466c48'
+  },
+  cloud: {
+    kinder: 'kinder',        /* kinder/<code>: Vorname, von der Lehrkraft angelegt (nur lesen) */
+    stand: 'fp_stand',       /* fp_stand/<code>: der Fortschritt dieses Kindes in der Flaschenpost */
+    schreibPauseMs: 2500     /* so lange nach der letzten Änderung warten, dann gebündelt schreiben */
   },
   nameMaxLaenge: 20,
 

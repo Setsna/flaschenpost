@@ -32,20 +32,21 @@ export const eltern = {
         ['Werbung zusammen anschauen:', 'Was soll ich kaufen? Was wird versprochen? Was wird nicht gesagt?'],
         ['Selbst vormachen:', 'Sagen Sie ruhig einmal „Das weiß ich noch nicht, das schaue ich nach.“ Kinder lernen viel daraus, dass Erwachsene nachprüfen.'],
         ['Fragen statt belehren:', '„Woher weißt du das?“ hilft meist mehr als „Das stimmt nicht.“'],
+        ['Der Code gehört Ihrem Kind:', 'Wer ihn kennt, kann sich damit anmelden. Auf einem fremden Gerät am Ende bitte auf „Abmelden“ tippen.'],
         ['Neugier statt Misstrauen:', 'Nicht alles, was man liest oder hört, ist falsch. Ziel ist, gute Quellen zu erkennen und Unsicheres nachzuprüfen.']
       ]
     },
     {
       titel: 'Daten',
       absaetze: [
-        'Es gibt kein Konto und keine Anmeldung. Gespeichert werden der Vorname, der Lernstand und die eigenen Einträge, und zwar nur im Browser dieses Geräts. Nichts wird an einen Server geschickt. Eine Sicherungskopie gibt es nicht: Werden die Browserdaten gelöscht, ist der Stand weg. Arbeiten mehrere Kinder an einem Gerät, sind ihre Namen nicht durch ein Passwort geschützt.'
+        'Die Kinder melden sich mit ihrem Zugangscode an. Es ist derselbe wie beim Perlentaucher. Gespeichert werden unter diesem Code, welche Briefe das Kind geprüft hat, die Lernzeit und die Selbsteinschätzung („Kann ich!“ / „Übe ich noch“). So ist der Stand auf jedem Gerät da, in der Schule und zu Hause. Der Stand liegt zusätzlich im Browser des Geräts, damit auch ohne Internet gearbeitet werden kann. Die eigenen Einträge der Kinder („Mein Eintrag“) bleiben nur im Browser des Geräts und gehen nicht ins Internet. Andere Kinder sehen den Stand nicht, eine Auswertung für die Lehrkraft gibt es nicht. Löschen lassen können Sie den Stand über die Lehrkraft.'
       ],
       datenschutzLink: true
     },
     {
       titel: 'Mehr zum Thema KI',
       absaetze: [
-        'Wie Künstliche Intelligenz funktioniert und warum ein Chatbot manchmal überzeugend falsch liegt, üben die Kinder im KI-Korallenriff. Es ist genauso gebaut: ohne Konto und ohne Werbung.'
+        'Wie Künstliche Intelligenz funktioniert und warum ein Chatbot manchmal überzeugend falsch liegt, üben die Kinder im KI-Korallenriff. Auch dort gibt es keine Werbung.'
       ],
       link: { text: 'Zum KI-Korallenriff', url: 'https://setsna.github.io/ki-korallenriff/' }
     }

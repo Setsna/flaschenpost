@@ -5,12 +5,12 @@
    Noch nicht: kurze Rückmeldung, einmal „Noch einmal versuchen“; beim zweiten Mal die Lösung + Erklärung.
    Hilfe-Helfer: Mira gibt gestufte Tipps aus den Daten, keine KI, nie die Lösung.
    Antworten werden nicht gespeichert (Ingo, 11.11.2026), nur fertig, Siegel, Eintrag und Lernzeit. */
-import { config as C } from './config.js?v=66';
-import * as S from './speicher.js?v=66';
-import * as L from './lernzeit.js?v=66';
-import { stationen as WER, abschluss as WER_AB } from './daten/wer.js?v=66';
-import { stationen as WARUM, abschluss as WARUM_AB } from './daten/warum.js?v=66';
-import { stationen as WOHER, abschluss as WOHER_AB } from './daten/woher.js?v=66';
+import { config as C } from './config.js?v=67';
+import * as S from './speicher.js?v=67';
+import * as L from './lernzeit.js?v=67';
+import { stationen as WER, abschluss as WER_AB } from './daten/wer.js?v=67';
+import { stationen as WARUM, abschluss as WARUM_AB } from './daten/warum.js?v=67';
+import { stationen as WOHER, abschluss as WOHER_AB } from './daten/woher.js?v=67';
 
 export const STATIONEN = { ...WER, ...WARUM, ...WOHER };
 export const ABSCHLUESSE = { [WER_AB.modul]: WER_AB, [WARUM_AB.modul]: WARUM_AB, [WOHER_AB.modul]: WOHER_AB };
@@ -352,11 +352,11 @@ function tischZeigen() {
 /* ---------- Mein Eintrag und Fertig! ---------- */
 function eintragZeigen() {
   phase = 'eintrag';
-  const k = S.aktiv();
-  const alt = k && k.eintraege[id] ? k.eintraege[id].text : '';
+  const e = S.eintraege();
+  const alt = e[id] ? e[id].text : '';
   teilZeigen('Mein Eintrag', `
     <label for="eintrag-feld" class="eintrag__frage">${ctx.esc(st.eintrag.frage)}</label>
-    <p class="leise" id="eintrag-hinweis">Schreib keine echten Namen, keine Adressen und nichts, was nur dich etwas angeht. Du kannst das Feld auch leer lassen.</p>
+    <p class="leise" id="eintrag-hinweis">Schreib keine echten Namen, keine Adressen und nichts, was nur dich etwas angeht. Du kannst das Feld auch leer lassen. Dein Eintrag bleibt nur auf diesem Gerät.</p>
     <textarea id="eintrag-feld" class="eintrag__feld" rows="5" maxlength="${S.EINTRAG_MAX}" aria-describedby="eintrag-hinweis">${ctx.esc(alt)}</textarea>
     <p class="knopfreihe"><button type="button" class="knopf haupt" data-st="fertig">Fertig!</button></p>`);
   /* Fokus auf die Überschrift, nicht ins Feld: sonst springt am iPad sofort die Tastatur auf */

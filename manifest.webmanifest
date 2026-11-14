@@ -1,7 +1,7 @@
 {
   "name": "Flaschenpost",
   "short_name": "Flaschenpost",
-  "description": "Quellen prüfen für Klasse 3 und 4. Ohne Anmeldung, alles bleibt auf dem Gerät.",
+  "description": "Quellen prüfen für Klasse 3 und 4. Anmeldung mit dem Code der Klasse, ohne Werbung.",
   "lang": "de",
   "start_url": "./index.html",
   "scope": "./",
