@@ -1,13 +1,13 @@
 /* Flaschenpost: Ansichten und Bedienung.
    Anmeldung mit dem Code (seit dem Konto-Umbau, 14.11.2026), Startseite „Nächster Brief“, Fundbuch, Urkunde.
    Die Briefe (Stationen) stehen in js/station.js. */
-import { config as C } from './config.js?v=67';
-import * as S from './speicher.js?v=67';
+import { config as C } from './config.js?v=68';
+import * as S from './speicher.js?v=68';
 const cloud = S.cloud;
-import * as L from './lernzeit.js?v=67';
-import { stationZeigen, gibtStation, bedienen, STATIONEN, ABSCHLUESSE } from './station.js?v=67';
-import { urkundeAnbieten, urkundeTeilen } from './urkunde.js?v=67';
-import { eltern as ELTERN, lehrkraefte as LEHRKRAEFTE } from './daten/erwachsene.js?v=67';
+import * as L from './lernzeit.js?v=68';
+import { stationZeigen, gibtStation, bedienen, STATIONEN, ABSCHLUESSE } from './station.js?v=68';
+import { urkundeAnbieten, urkundeTeilen } from './urkunde.js?v=68';
+import { eltern as ELTERN, lehrkraefte as LEHRKRAEFTE } from './daten/erwachsene.js?v=68';
 
 const app = document.getElementById('app');
 const meldung = document.getElementById('meldung');
