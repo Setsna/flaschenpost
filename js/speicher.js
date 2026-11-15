@@ -7,7 +7,7 @@
    - ?vorschau=N zeigt einen Beispielstand mit N fertigen Stationen und speichert nichts.
    - Kein Export als Datei (Ingo, 11.11.2026). Kein Löschknopf für Kinder, Zurücksetzen macht die Lehrkraft.
    Die drei Baukasten-Module sind klassische Skripte und stehen in index.html vor diesem Modul. */
-import { config as C } from './config.js?v=69';
+import { config as C } from './config.js?v=70';
 
 const LK = window.LagunenKonto;
 const A = LK.abgleich;

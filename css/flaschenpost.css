@@ -628,3 +628,14 @@ input[type="text"]:focus-visible { outline: 3px solid var(--navy); outline-offse
 /* Kein Doppeltipp-Zoom in Safari (Kinder tippen Knöpfe schnell hintereinander, Safari zoomte dann).
    Zoomen mit zwei Fingern bleibt möglich. Flächen zum Ziehen oder Malen behalten ihr eigenes touch-action. (12.11.2026) */
 html, body, button, a, input, label, summary, select, textarea { touch-action: manipulation; }
+
+/* Erwachsenenbereich wie bei den Riff-Akten (Ingo, 15.11.2026): zugeklappt eine kleine Nebelglas-Pille
+   mit Pfeil links, damit Kinder nicht hineintippen; aufgeklappt helles Papier in voller Breite. */
+.erwachsene:not([open]) {
+  width: fit-content; max-width: 100%; margin: 0.6rem auto; padding: 0 1.1em;
+  border-radius: 999px; border: 0; box-shadow: none; background: var(--nebel); color: var(--weiss);
+  -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px);
+}
+.erwachsene:not([open]) > summary { gap: 0.55em; }
+.erwachsene:not([open]) > summary h2 { font-family: var(--schrift-text); font-size: 1rem; font-weight: 700; color: inherit; }
+.erwachsene:not([open]) > summary:focus-visible { outline-color: var(--weiss); box-shadow: 0 0 0 2px var(--navy); border-radius: 999px; }
