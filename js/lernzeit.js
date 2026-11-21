@@ -2,8 +2,8 @@
    - Zählt nur, solange eine Station offen und die Seite sichtbar ist (Muster Korallenriff).
    - Eine Sitzung zählt höchstens config.lernzeit.hoechstensSek, unter mindestensSek gar nicht.
    - Wird in Etappe 3 eingeschaltet: Station öffnen -> starten(modulId), verlassen -> beenden(). */
-import { config as C } from './config.js?v=70';
-import * as S from './speicher.js?v=70';
+import { config as C } from './config.js?v=71';
+import * as S from './speicher.js?v=71';
 
 let modul = null;
 let seit = 0;

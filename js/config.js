@@ -31,7 +31,8 @@ export const config = {
   cloud: {
     kinder: 'kinder',        /* kinder/<code>: Vorname, von der Lehrkraft angelegt (nur lesen) */
     stand: 'fp_stand',       /* fp_stand/<code>: der Fortschritt dieses Kindes in der Flaschenpost */
-    schreibPauseMs: 2500     /* so lange nach der letzten Änderung warten, dann gebündelt schreiben */
+    schreibPauseMs: 2500,    /* so lange nach der letzten Änderung warten, dann gebündelt schreiben */
+    freigabe: 'flaschenpost' /* Schlüssel im Lehrerbereich des Perlentauchers (oeffentlich/plattformen), seit 21.11.2026 */
   },
   nameMaxLaenge: 20,
 

@@ -1,13 +1,13 @@
 /* Flaschenpost: Ansichten und Bedienung.
    Anmeldung mit dem Code (seit dem Konto-Umbau, 14.11.2026), Startseite „Nächster Brief“, Fundbuch, Urkunde.
    Die Briefe (Stationen) stehen in js/station.js. */
-import { config as C } from './config.js?v=70';
-import * as S from './speicher.js?v=70';
+import { config as C } from './config.js?v=71';
+import * as S from './speicher.js?v=71';
 const cloud = S.cloud;
-import * as L from './lernzeit.js?v=70';
-import { stationZeigen, gibtStation, bedienen, STATIONEN, ABSCHLUESSE } from './station.js?v=70';
-import { urkundeAnbieten, urkundeTeilen } from './urkunde.js?v=70';
-import { eltern as ELTERN, lehrkraefte as LEHRKRAEFTE } from './daten/erwachsene.js?v=70';
+import * as L from './lernzeit.js?v=71';
+import { stationZeigen, gibtStation, bedienen, STATIONEN, ABSCHLUESSE } from './station.js?v=71';
+import { urkundeAnbieten, urkundeTeilen } from './urkunde.js?v=71';
+import { eltern as ELTERN, lehrkraefte as LEHRKRAEFTE } from './daten/erwachsene.js?v=71';
 
 const app = document.getElementById('app');
 const meldung = document.getElementById('meldung');
@@ -62,6 +62,7 @@ const MOMENT = 'Einen Moment …';
 
 /* Ergebnis von cloud.anmelden() oder start() anzeigen */
 function nachAnmelden(r) {
+  if (!r.ok && r.zu) { ansichtZu(); return; }
   if (!r.ok) {
     if (ansicht === 'code' && app.querySelector('#code')) {
       app.querySelector('#code-form button[type="submit"]').disabled = false;
@@ -98,6 +99,28 @@ function ansichtCode(hinweis = '') {
     app.querySelector('#code-hinweis').textContent = MOMENT;
     cloud.anmelden(app.querySelector('#code').value).then(nachAnmelden, () => nachAnmelden({ ok: false, grund: cloud.TEXT.sonst }));
   });
+}
+
+/* Die Lehrkraft hat die Flaschenpost im Lehrerbereich gesperrt (oeffentlich/plattformen, js/konto-cloud.js).
+   Das Kind ist schon wieder abgemeldet, sein Stand bleibt auf dem Gerät und in der Datenbank.
+   Text von Ingo gewählt am 21.11.2026 (cloud.TEXT.zu): „Bald offen!“ als Überschrift, der Rest darunter.
+   Gebaut wie in der Kieselwaage (v=7). */
+const SCHLOSS = '<svg class="schloss" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+function ansichtZu() {
+  const text = cloud.TEXT.zu;
+  const i = text.indexOf('! ');
+  const titel = i > 0 ? text.slice(0, i + 1) : '';
+  const rest = i > 0 ? text.slice(i + 2) : text;
+  zeigen(`
+    ${kopf(esc(C.unterzeile), true)}
+    <section class="papier zu" aria-labelledby="h-zu">
+      <h2 id="h-zu">${titel ? SCHLOSS + esc(titel) : '<span class="nurvorlesen">Bald offen</span>'}</h2>
+      <p>${esc(rest)}</p>
+      <p class="knopfreihe"><button type="button" class="knopf glas-knopf" data-aktion="abmelden">Abmelden</button></p>
+    </section>
+    ${erwachsene()}`, 'Bald offen');
+  ansicht = 'zu';
+  adresse('');
 }
 
 /* Zeile auf der Startseite, wenn der Stand gerade nicht in der Datenbank ankommt */
@@ -434,7 +457,7 @@ function starten() {
     /* Ein gescannter Code hat Vorrang vor dem Kind, das auf dem Gerät noch angemeldet ist. */
     if (S.aktiv() && S.code() !== qr) S.S.abmelden();
     if (S.aktiv()) ansichtStart(); else ansichtCode(MOMENT);
-    cloud.anmelden(qr).then(r => { if (darfWechseln()) { if (!r.ok) ansichtCode(r.grund); else nachAnmelden(r); } }, () => {});
+    cloud.anmelden(qr).then(r => { if (r.zu) ansichtZu(); else if (darfWechseln()) { if (!r.ok) ansichtCode(r.grund); else nachAnmelden(r); } }, () => {});
     return;
   }
   anzeigen();
@@ -442,11 +465,14 @@ function starten() {
   const gemerkt = S.code();
   cloud.start().then(r => {
     if (r.ok) { if (darfWechseln()) nachAnmelden(r); return null; }
+    /* Gesperrt: auch mitten in einem Brief wechseln, denn das Kind ist schon abgemeldet */
+    if (r.zu) { ansichtZu(); return null; }
     if (r.grund) return r;
     /* Firebase kennt niemanden, der Tab aber schon: mit dem gemerkten Code anmelden */
     return gemerkt && S.code() === gemerkt ? cloud.anmelden(gemerkt) : null;
   }).then(r => {
     if (!r) return;
+    if (r.zu) { ansichtZu(); return; }
     if (r.ok) { if (ansicht === 'start' && darfWechseln()) ansichtStart(); return; }
     /* Die Lehrkraft hat den Code gesperrt: nicht auf dem Gerät weiterarbeiten lassen */
     if (r.grund === cloud.TEXT.gesperrt && S.aktiv()) { S.S.abmelden(); if (darfWechseln()) ansichtCode(r.grund); }

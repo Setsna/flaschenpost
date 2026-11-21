@@ -543,6 +543,11 @@ input[type="text"]:focus-visible { outline: 3px solid var(--navy); outline-offse
 .fertig .frage { margin-bottom: var(--a-s); }
 /* Nach „Fertig!“: oben der eine Hauptknopf, darunter die Nebenknöpfe (feste Ordnung 1 + 2 in jeder Lage) */
 .knopfreihe--mitte { justify-content: center; }
+
+/* ---------- Plattform gesperrt („Bald offen“, Lehrerbereich des Perlentauchers, 21.11.2026) ---------- */
+.schloss { width: 1em; height: 1em; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.zu h2 { display: flex; align-items: center; gap: 0.45em; }
+.zu h2 .schloss { flex: none; width: 0.9em; height: 0.9em; }
 .knopfreihe--neben { margin-top: var(--a-s); }
 
 /* Querformat: Zurück | Titel | Mira in einer Zeile (steht nach den Hochformat-Regeln, damit es gewinnt) */
